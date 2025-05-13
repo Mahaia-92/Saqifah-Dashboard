@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadAssumptionsAmount();
-
-  // يمكنك لاحقاً إضافة المزيد من الوظائف هنا لبقية الأقسام
+  loadAssumptionsPercentage();
+  loadSensitivityAnalysis();
+  loadRevenuesByService();
+  loadRevenuesByItem();
+  loadServicesTable();
+  loadSummary();
 });
 
 function loadAssumptionsAmount() {
@@ -109,3 +113,99 @@ function loadAssumptionsAmount() {
       }
     });
 }
+
+function loadAssumptionsPercentage() {
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTP7u1WMbj-WX00aIsOUEI8Pjr_eWhWNyj_L3tWgr3urhjCHXkmJU_-YGEjNnB32IxqK0lUA3rzlXkh/pub?gid=0&single=true&output=csv';
+  fetch(csvUrl)
+    .then(response => response.text())
+    .then(csvText => {
+      const rows = csvText.split('\n').map(row => row.split(','));
+      const headers = rows[0];
+      const فرضيةIndex = headers.indexOf("الفرضية");
+      const نسبةIndex = headers.indexOf("النسبة");
+      const سنةIndex = headers.indexOf("السنة");
+
+      const yearSet = new Set();
+      const assumptionSet = new Set();
+      const dataByAssumption = {};
+
+      rows.slice(1).forEach(row => {
+        const فرضية = row[فرضيةIndex];
+        const نسبة = parseFloat(row[نسبةIndex]);
+        const سنة = row[سنةIndex];
+
+        if (!فرضية || isNaN(نسبة)) return;
+
+        yearSet.add(سنة);
+        assumptionSet.add(فرضية);
+
+        if (!dataByAssumption[فرضية]) {
+          dataByAssumption[فرضية] = { نسب: [] };
+        }
+
+        dataByAssumption[فرضية].نسب.push({ نسبة, سنة });
+      });
+
+      const yearFilter = document.getElementById('yearFilter');
+      yearSet.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      });
+
+      const hypoFilter = document.getElementById('hypoFilter');
+      assumptionSet.forEach(assumption => {
+        const option = document.createElement('option');
+        option.value = assumption;
+        option.textContent = assumption;
+        hypoFilter.appendChild(option);
+      });
+
+      let chartInstance = null;
+
+      function renderChart(assumption, year) {
+        const ctx = document.getElementById('percentageChart').getContext('2d');
+        const filtered = dataByAssumption[assumption].نسب.filter(d => d.سنة === year);
+
+        const labels = filtered.map((_, idx) => `فرضية ${idx + 1}`);
+        const values = filtered.map(d => d.نسبة);
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'النسبة',
+              data: values,
+              backgroundColor: '#d4af37',
+              borderColor: '#d4af37',
+              fill: false
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+
+        document.getElementById('indicatorBox').innerText = `النسبة الحالية: ${values[values.length - 1]}`;
+      }
+
+      hypoFilter.addEventListener('change', () => {
+        const selectedAssumption = hypoFilter.value;
+        const selectedYear = yearFilter.value;
+        renderChart(selectedAssumption, selectedYear);
+      });
+
+      yearFilter.addEventListener('change', () => {
+        const selectedAssumption = hypoFilter.value;
+        const selectedYear = yearFilter.value;
+        renderChart(selectedAssumption, selectedYear);
+      });
+
+     
