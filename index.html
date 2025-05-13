@@ -1,38 +1,71 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المخطط المالي لمشروع سقيفة</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة التحكم المالية</title>
-  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="revenueChart"></canvas>
-<label for="subscriptionPrice">سعر الاشتراك: <span id="priceValue">150</span></label>
-<input type="range" id="subscriptionPrice" min="150" max="300" value="150" />
+  <div class="container">
+    <h1>المخطط المالي لمشروع سقيفة</h1>
+    <label for="yearFilter">اختر السنة:</label>
+    <select id="yearFilter"></select>
 
-  <header>
-    <h1>لوحة التحكم المالية</h1>
-    <nav>
-      <button data-tab="overview">نظرة عامة</button>
-      <button data-tab="financial">الأداء المالي</button>
-      <button data-tab="scenarios">سيناريوهات الفرضيات</button>
-      <button data-tab="growth">نمو وتسويق</button>
-      <button data-tab="operations">العمليات التقنية</button>
-      <button data-tab="partnerships">الشراكات</button>
-      <button data-tab="services">خدمات سقيفة</button>
-    </nav>
-  </header>
-  <main>
-    <section id="overview" class="tab-content active">
-      <!-- محتوى نظرة عامة -->
-    </section>
-    <section id="financial" class="tab-content">
-      <!-- محتوى الأداء المالي -->
-    </section>
-    <!-- أضف باقي الأقسام هنا -->
-  </main>
+    <div class="dashboard">
+      <section class="card" id="assumptions-1">
+        <h2>الفرضيات (المبالغ)</h2>
+        <label for="itemFilter1">اختر البند:</label>
+        <select id="itemFilter1"></select>
+        <canvas id="amountChart"></canvas>
+        <div id="notesBox"></div>
+      </section>
+
+      <section class="card" id="assumptions-2">
+        <h2>الفرضيات (النسب)</h2>
+        <label for="hypoFilter">اختر الفرضية:</label>
+        <select id="hypoFilter"></select>
+        <canvas id="percentageChart"></canvas>
+        <div id="indicatorBox"></div>
+      </section>
+
+      <section class="card" id="sensitivity">
+        <h2>تحليل الحساسية</h2>
+        <label for="variableFilter">اختر المتغير:</label>
+        <select id="variableFilter"></select>
+        <canvas id="changeChart"></canvas>
+        <canvas id="netIncomeChart"></canvas>
+      </section>
+
+      <section class="card" id="revenues-1">
+        <h2>الإيرادات المكتسبة (الخدمات)</h2>
+        <label for="serviceFilter">اختر الخدمة:</label>
+        <select id="serviceFilter"></select>
+        <div class="cards-row" id="serviceRevenueCards"></div>
+      </section>
+
+      <section class="card" id="revenues-2">
+        <h2>الإيرادات المكتسبة (البنود)</h2>
+        <label for="itemFilter2">اختر البند:</label>
+        <select id="itemFilter2"></select>
+        <div class="cards-row" id="itemRevenueCards"></div>
+      </section>
+
+      <section class="card" id="services">
+        <h2>الخدمات</h2>
+        <table id="servicesTable"></table>
+      </section>
+
+      <section class="card" id="summary">
+        <h2>الملخص</h2>
+        <label for="summaryFilter">اختر البند:</label>
+        <select id="summaryFilter"></select>
+        <div class="cards-row" id="summaryCards"></div>
+      </section>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
