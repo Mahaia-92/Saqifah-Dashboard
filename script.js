@@ -19,3 +19,23 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(rows);
     });
 });
+const ctx = document.getElementById('revenueChart').getContext('2d');
+const revenueChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    datasets: [{
+      label: 'الإيرادات',
+      data: [5000, 7000, 8000, 6000],
+      backgroundColor: '#d4af37' // ذهبي
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
