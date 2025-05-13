@@ -1,35 +1,89 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f5f5dc; /* بيج */
-  color: #000;
+  font-family: "Arial", sans-serif;
+  background-color: #ffffff;
+  color: #000000;
   margin: 0;
   padding: 0;
+  direction: rtl;
 }
 
-header {
-  background-color: #d4af37; /* ذهبي */
-  padding: 1rem;
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #000;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+select {
+  padding: 5px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.card {
+  border: 2px solid #d4af37;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cards-row .card-inner {
+  flex: 1;
+  min-width: 120px;
+  background-color: #fdf7e3;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  padding: 10px;
   text-align: center;
 }
 
-nav button {
-  background-color: #8b4513; /* بني */
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  margin: 0 0.2rem;
-  cursor: pointer;
+canvas {
+  max-width: 100%;
+  margin-top: 20px;
 }
 
-nav button:hover {
-  background-color: #a0522d;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
 }
 
-.tab-content {
-  display: none;
-  padding: 1rem;
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
 }
 
-.tab-content.active {
-  display: block;
+#notesBox, #indicatorBox {
+  margin-top: 15px;
+  font-style: italic;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-right: 4px solid #d4af37;
 }
