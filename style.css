@@ -1,0 +1,35 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f5dc; /* بيج */
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #d4af37; /* ذهبي */
+  padding: 1rem;
+  text-align: center;
+}
+
+nav button {
+  background-color: #8b4513; /* بني */
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.2rem;
+  cursor: pointer;
+}
+
+nav button:hover {
+  background-color: #a0522d;
+}
+
+.tab-content {
+  display: none;
+  padding: 1rem;
+}
+
+.tab-content.active {
+  display: block;
+}
