@@ -39,3 +39,11 @@ const revenueChart = new Chart(ctx, {
     }
   }
 });
+const priceSlider = document.getElementById('subscriptionPrice');
+const priceValue = document.getElementById('priceValue');
+
+priceSlider.addEventListener('input', () => {
+  priceValue.textContent = priceSlider.value;
+  // تحديث البيانات والرسوم البيانية بناءً على القيمة الجديدة
+});
+
