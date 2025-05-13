@@ -1,49 +1,111 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const tabs = document.querySelectorAll('nav button');
-  const contents = document.querySelectorAll('.tab-content');
+  loadAssumptionsAmount();
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      contents.forEach(content => content.classList.remove('active'));
-      document.getElementById(tab.dataset.tab).classList.add('active');
-    });
-  });
+  // يمكنك لاحقاً إضافة المزيد من الوظائف هنا لبقية الأقسام
+});
 
-  // مثال لجلب البيانات من Google Sheets
-  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSbsVGBOpP_maGsFfmRt0AgM-9lfTbgG8cqcSescke0Il8PQ6A8JRAYX9xNFCWNHo7Q28a8gGsG4sES/pub?output=csv')
+function loadAssumptionsAmount() {
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmMnmmhI7jVWYbapuyF3Xo3e26H6WevpavU3DIxpZw4zvd-F0gxOsE7QZYuknZ2Uf3IYI6Nx0noo4a/pub?gid=0&single=true&output=csv';
+  fetch(csvUrl)
     .then(response => response.text())
-    .then(data => {
-      // تحويل CSV إلى مصفوفة
-      const rows = data.split('\n').map(row => row.split(','));
-      // معالجة البيانات حسب الحاجة
-      console.log(rows);
-    });
-});
-const ctx = document.getElementById('revenueChart').getContext('2d');
-const revenueChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-    datasets: [{
-      label: 'الإيرادات',
-      data: [5000, 7000, 8000, 6000],
-      backgroundColor: '#d4af37' // ذهبي
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true
+    .then(csvText => {
+      const rows = csvText.split('\n').map(row => row.split(','));
+      const headers = rows[0];
+      const بندIndex = headers.indexOf("البند");
+      const مبلغIndex = headers.indexOf("المبلغ بالريال");
+      const ملاحظاتIndex = headers.indexOf("ملاحظات");
+      const سنةIndex = headers.indexOf("السنة");
+
+      const yearSet = new Set();
+      const itemSet = new Set();
+      const dataByItem = {};
+
+      rows.slice(1).forEach(row => {
+        const بند = row[بندIndex];
+        const مبلغ = parseFloat(row[مبلغIndex]);
+        const ملاحظة = row[ملاحظاتIndex];
+        const سنة = row[سنةIndex];
+
+        if (!بند || isNaN(مبلغ)) return;
+
+        yearSet.add(سنة);
+        itemSet.add(بند);
+
+        if (!dataByItem[بند]) {
+          dataByItem[بند] = { مبالغ: [], ملاحظات: [] };
+        }
+
+        dataByItem[بند].مبالغ.push({ مبلغ, سنة });
+        if (ملاحظة && !dataByItem[بند].ملاحظات.includes(ملاحظة)) {
+          dataByItem[بند].ملاحظات.push(ملاحظة);
+        }
+      });
+
+      const yearFilter = document.getElementById('yearFilter');
+      yearSet.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      });
+
+      const itemFilter1 = document.getElementById('itemFilter1');
+      itemSet.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        itemFilter1.appendChild(option);
+      });
+
+      let chartInstance = null;
+
+      function renderChart(item, year) {
+        const ctx = document.getElementById('amountChart').getContext('2d');
+        const filtered = dataByItem[item].مبالغ.filter(d => d.سنة === year);
+
+        const labels = filtered.map((_, idx) => `بند ${idx + 1}`);
+        const values = filtered.map(d => d.مبلغ);
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'المبلغ بالريال',
+              data: values,
+              backgroundColor: '#d4af37'
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+
+        document.getElementById('notesBox').innerText = dataByItem[item].ملاحظات.join('\n');
       }
-    }
-  }
-});
-const priceSlider = document.getElementById('subscriptionPrice');
-const priceValue = document.getElementById('priceValue');
 
-priceSlider.addEventListener('input', () => {
-  priceValue.textContent = priceSlider.value;
-  // تحديث البيانات والرسوم البيانية بناءً على القيمة الجديدة
-});
+      itemFilter1.addEventListener('change', () => {
+        const selectedItem = itemFilter1.value;
+        const selectedYear = yearFilter.value;
+        renderChart(selectedItem, selectedYear);
+      });
 
+      yearFilter.addEventListener('change', () => {
+        const selectedItem = itemFilter1.value;
+        const selectedYear = yearFilter.value;
+        renderChart(selectedItem, selectedYear);
+      });
+
+      // عرض أول رسم افتراضياً
+      const firstItem = itemFilter1.value;
+      const firstYear = yearFilter.value;
+      if (firstItem && firstYear) {
+        renderChart(firstItem, firstYear);
+      }
+    });
+}
