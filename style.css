@@ -1,89 +1,64 @@
+
 body {
-  font-family: "Arial", sans-serif;
-  background-color: #ffffff;
-  color: #000000;
+  font-family: 'Arial', sans-serif;
+  background-color: white;
   margin: 0;
   padding: 0;
   direction: rtl;
+  color: black;
 }
 
 .container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
+  padding: 2rem;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 30px;
-  color: #000;
+  color: black;
+  margin-bottom: 1rem;
 }
 
 label {
-  display: block;
-  margin: 10px 0 5px;
   font-weight: bold;
 }
 
 select {
-  padding: 5px;
-  margin-bottom: 20px;
-  width: 100%;
-  max-width: 300px;
+  margin: 0.5rem 0 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 .dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
 .card {
   border: 2px solid #d4af37;
-  border-radius: 10px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  padding: 1rem;
+  background-color: #fffaf0;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.card h2 {
+  color: #8b4513;
 }
 
 .cards-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 1rem;
 }
 
-.cards-row .card-inner {
+.card-box {
+  background-color: #f9f9f9;
+  border: 1px solid #d4af37;
+  border-radius: 12px;
+  padding: 1rem;
   flex: 1;
   min-width: 120px;
-  background-color: #fdf7e3;
-  border: 1px solid #d4af37;
-  border-radius: 8px;
-  padding: 10px;
   text-align: center;
-}
-
-canvas {
-  max-width: 100%;
-  margin-top: 20px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-table th, table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-
-#notesBox, #indicatorBox {
-  margin-top: 15px;
-  font-style: italic;
-  background-color: #f9f9f9;
-  padding: 10px;
-  border-right: 4px solid #d4af37;
 }
